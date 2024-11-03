@@ -4,7 +4,7 @@ from geometry import *
 class Window():
   def __init__(self, width, height):
     self.root = Tk()
-    self.root.title = "My window"
+    self.root.title("My window")
     self.canvas = Canvas(self.root, bg="black", height=height, width=width)
     self.canvas.pack(fill=BOTH, expand=1)
     self.running = False
