@@ -2,8 +2,11 @@ from cell import Cell
 import time
 
 class Maze():
-  def __init__(self, win, x, y, num_rows, num_cols, cell_width, cell_height, animation_delay=0.5):
-    self.__win = win
+  def __init__(self, x, y, num_rows, num_cols, cell_width, cell_height, animation_delay=0.5, window=None):
+    """
+    Initialize the maze with the given parameters
+    """
+    self.__win = window
     self.x = x
     self.y = y
     self.num_rows = num_rows
@@ -16,30 +19,41 @@ class Maze():
     self._draw_cells()
 
   def _create_cells(self):
+    """
+    Create and return a 2D list of cells
+    """
     rows = []
     for i in range(self.num_rows):
       cols = []
       for j in range(self.num_cols):
         cols.append(Cell(
-          self.__win,
           self.x + j * self.cell_width,
           self.y + i * self.cell_height,
           self.cell_width,
-          self.cell_height
+          self.cell_height,
+          window=self.__win
         ))
       rows.append(cols)
     return rows
   
   def _draw_cells(self):
+    """
+    Draw all the cells in the maze
+    """
     for i in range(self.num_rows):
       for j in range(self.num_cols):
         self._draw_cell(i, j)
         self._animate()
 
   def _draw_cell(self, i, j):
+    """
+    Draw the cell at the given row and column
+    """
     self._cells[i][j].draw()
 
   def _animate(self):
-    # call the redraw method of the window and sleep for 0.5 seconds
+    """
+    Redraw the window after a delay
+    """
     self.__win.redraw()
     time.sleep(self.animation_delay)

@@ -1,7 +1,7 @@
 from window import *
 
 class Cell():
-  def __init__(self, window, x, y, width, height, has_left_wall=True, has_right_wall=True, has_top_wall=True, has_bottom_wall=True):
+  def __init__(self, x, y, width, height, has_left_wall=True, has_right_wall=True, has_top_wall=True, has_bottom_wall=True, window=None):
     self.__window = window
     self.x = x
     self.y = y
