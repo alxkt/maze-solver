@@ -55,5 +55,6 @@ class Maze():
     """
     Redraw the window after a delay
     """
-    self.__win.redraw()
-    time.sleep(self.animation_delay)
+    if self.__win is not None:
+      self.__win.redraw()
+      time.sleep(self.animation_delay)

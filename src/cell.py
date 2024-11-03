@@ -19,10 +19,11 @@ class Cell():
     bottom = Line(Point(self.x, self.y + self.height), Point(self.x + self.width, self.y + self.height))
 
     color = "red"
-    if self.has_left_wall: self.__window.draw_line(left, color)
-    if self.has_right_wall: self.__window.draw_line(right, color)
-    if self.has_top_wall: self.__window.draw_line(top, color)
-    if self.has_bottom_wall: self.__window.draw_line(bottom, color)
+    if self.__window is not None:
+      if self.has_left_wall: self.__window.draw_line(left, color)
+      if self.has_right_wall: self.__window.draw_line(right, color)
+      if self.has_top_wall: self.__window.draw_line(top, color)
+      if self.has_bottom_wall: self.__window.draw_line(bottom, color)
 
   def draw_move(self, target_cell, undo=False):
     start = Point(self.x + self.width/2, self.y + self.height/2)
@@ -30,4 +31,5 @@ class Cell():
     line = Line(start, end)
     color = "red"
     if undo: color = "gray"
-    self.__window.draw_line(line, color)
+    if self.__window is not None:
+      self.__window.draw_line(line, color)

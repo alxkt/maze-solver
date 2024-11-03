@@ -11,7 +11,7 @@ def main():
   # cell2.has_left_wall = False
   # cell2.draw()
   # cell.draw_move(cell2, undo=True)
-  maze = Maze(10, 10, 5, 15, 20, 20, 0.1, win)
+  maze = Maze(10, 10, 5, 15, 20, 20, animation_delay=0.1, window=win)
 
   win.wait_for_close()
 
