@@ -72,43 +72,6 @@ class Maze():
     self._cells[self.num_rows - 1][self.num_cols - 1].has_bottom_wall = False
     self._cells[self.num_rows - 1][self.num_cols - 1].draw()
 
-  def _break_walls_r_old(self, i, j):
-    """
-    Recursively break walls to create the maze
-    """
-    unvisited_adjacent_cells = []
-    if i > 0 and not self._cells[i - 1][j].visited:
-      unvisited_adjacent_cells.append((i - 1, j))
-    if j > 0 and not self._cells[i][j - 1].visited:
-      unvisited_adjacent_cells.append((i, j - 1))
-    if i < self.num_rows - 1 and not self._cells[i + 1][j].visited:
-      unvisited_adjacent_cells.append((i + 1, j))
-    if j < self.num_cols - 1 and not self._cells[i][j + 1].visited:
-      unvisited_adjacent_cells.append((i, j + 1))
-
-    if len(unvisited_adjacent_cells) == 0:
-      return
-
-    next_i, next_j = unvisited_adjacent_cells[self.seed.randint(0, len(unvisited_adjacent_cells) - 1)]
-    self._cells[i][j].visited = True
-    self._cells[next_i][next_j].visited = True
-    # I need to remove the walls between the two cells by setting for example, in a move to the right, current cell's right wall to False and next cell's left wall to False
-    if next_i < i:
-      self._cells[i][j].has_top_wall = False
-      self._cells[next_i][next_j].has_bottom_wall = False
-    elif next_i > i:
-      self._cells[i][j].has_bottom_wall = False
-      self._cells[next_i][next_j].has_top_wall = False
-    elif next_j < j:
-      self._cells[i][j].has_left_wall = False
-      self._cells[next_i][next_j].has_right_wall = False
-    elif next_j > j:
-      self._cells[i][j].has_right_wall = False
-      self._cells[next_i][next_j].has_left_wall = False
-
-    self._draw_cell(i, j)
-    self._draw_cell(next_i, next_j)
-    self._break_walls_r(next_i, next_j)
   def _break_walls_r(self, i, j):
     """
     Recursively break walls to create the maze using DFS with backtracking
@@ -139,3 +102,57 @@ class Maze():
             self._animate()
 
             self._break_walls_r(next_i, next_j)
+
+  def _reset_cells_visited(self):
+    """
+    Reset the visited flag of all cells
+    """
+    for i in range(self.num_rows):
+      for j in range(self.num_cols):
+        self._cells[i][j].visited = False
+
+  def solve(self):
+    self._reset_cells_visited()
+    return self._solve_r(0, 0)
+
+  def _solve_r(self, i, j):
+    """
+    Recursively solve the maze using DFS
+    """
+    self._animate()
+    self._cells[i][j].visited = True
+
+    if i == self.num_rows - 1 and j == self.num_cols - 1:
+      return [(i, j)]
+
+    directions = [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]
+    self.seed.shuffle(directions)  # Shuffle directions to ensure randomness
+
+    for next_i, next_j in directions:
+      if 0 <= next_i < self.num_rows and 0 <= next_j < self.num_cols and not self._cells[next_i][next_j].visited:
+        if next_i < i and not self._cells[i][j].has_top_wall:
+          # draw a line from the current cell to the next cell using Cell.draw_move
+          self._cells[i][j].draw_move(self._cells[next_i][next_j])
+          if self._solve_r(next_i, next_j):
+            return True
+          else:
+            self._cells[i][j].draw_move(self._cells[next_i][next_j], undo=True)
+        elif next_i > i and not self._cells[i][j].has_bottom_wall:
+          self._cells[i][j].draw_move(self._cells[next_i][next_j])
+          if self._solve_r(next_i, next_j):
+            return True
+          else:
+            self._cells[i][j].draw_move(self._cells[next_i][next_j], undo=True)
+        elif next_j < j and not self._cells[i][j].has_left_wall:
+          self._cells[i][j].draw_move(self._cells[next_i][next_j])
+          if self._solve_r(next_i, next_j):
+            return True
+          else:
+            self._cells[i][j].draw_move(self._cells[next_i][next_j], undo=True)
+        elif next_j > j and not self._cells[i][j].has_right_wall:
+          self._cells[i][j].draw_move(self._cells[next_i][next_j])
+          if self._solve_r(next_i, next_j):
+            return True
+          else:
+            self._cells[i][j].draw_move(self._cells[next_i][next_j], undo=True)
+    return False

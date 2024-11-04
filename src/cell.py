@@ -46,7 +46,7 @@ class Cell():
     start = Point(self.x + self.width/2, self.y + self.height/2)
     end = Point(target_cell.x + target_cell.width/2, target_cell.y + target_cell.height/2)
     line = Line(start, end)
-    color = "red"
+    color = "green"
     if undo: color = "gray"
     if self.__window is not None:
       self.__window.draw_line(line, color)
